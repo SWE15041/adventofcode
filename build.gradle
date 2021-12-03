@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+//    maven {
+//        url 'https://neowu.github.io/maven-repo/'
+//        content {
+//            includeGroup 'core.framework'
+//        }
+//    }
+}
+
+def coreNGVersion = '7.6.15'
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+//    implementation "core.framework:core-ng:${coreNGVersion}"
+//    testImplementation "core.framework:core-ng-test:${coreNGVersion}"
+}
+
+test {
+    useJUnitPlatform()
+}
+
