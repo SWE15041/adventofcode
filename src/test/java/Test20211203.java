@@ -3,7 +3,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -61,5 +63,60 @@ public class Test20211203 {
     @Test
     public void day3_1_2() {
         day3_1("day3_2.txt", 845186);
+    }
+
+
+    private void day3_2(String path, Integer expect) {
+        String text = ClasspathResources.text(path);
+        List<String> numbers = Arrays.stream(text.split("\n")).collect(Collectors.toList());
+        String oxygen = get(true, 0, numbers);
+        String co2 = get(false, 0, numbers);
+        int oxygenRate = Integer.parseInt(oxygen, 2);
+        int co2Rate = Integer.parseInt(co2, 2);
+        int result = oxygenRate * co2Rate;
+        System.out.printf("result(%s) = oxygenRate(%s) * co2Rate(%s)", result, oxygenRate, co2Rate);
+        Assertions.assertEquals(expect, result);
+    }
+
+    private String get(Boolean isOxygen, Integer position, List<String> numbers) {
+        if (numbers.size() == 1) {
+            return numbers.get(0);
+        }
+        int zeroCount = 0;
+        int oneCount = 0;
+        List<String> zeroNumbers = new ArrayList<>();
+        List<String> oneNumbers = new ArrayList<>();
+        for (String number : numbers) {
+            if (number.charAt(position) == '0') {
+                zeroCount++;
+                zeroNumbers.add(number);
+            } else {
+                oneCount++;
+                oneNumbers.add(number);
+            }
+        }
+        if (isOxygen) {
+            if (zeroCount == oneCount) {
+                return get(isOxygen, position + 1, oneNumbers);
+            } else {
+                return get(isOxygen, position + 1, (zeroCount > oneCount) ? zeroNumbers : oneNumbers);
+            }
+        } else {
+            if (zeroCount == oneCount) {
+                return get(isOxygen, position + 1, zeroNumbers);
+            } else {
+                return get(isOxygen, position + 1, (zeroCount > oneCount) ? oneNumbers : zeroNumbers);
+            }
+        }
+    }
+
+    @Test
+    public void day3_2_1() {
+        day3_2("day3_1.txt", 230);
+    }
+
+    @Test
+    public void day3_2_2() {
+        day3_2("day3_2.txt", 4636702);
     }
 }
