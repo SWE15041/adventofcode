@@ -31,6 +31,7 @@ public class Test20211205 {
         List<String> lineStrs = Arrays.stream(text.split("\n")).collect(Collectors.toList());
         List<Line> lines = new ArrayList<>();
         for (String lineStr : lineStrs) {
+            System.out.printf("'%s',\n", lineStr);
             List<String> points = Arrays.stream(lineStr.split(" -> ")).filter(o -> !"".equals(o)).collect(Collectors.toList());
             if (points.size() != 2) {
                 throw new RuntimeException("ERROR INPUT");
