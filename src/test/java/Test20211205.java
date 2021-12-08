@@ -1,7 +1,6 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,23 +14,47 @@ public class Test20211205 {
 
     @Test
     public void day5_1_1() {
-//        day5_1("day5_1.txt", 5);
-
-        day5_1_V2("day5_1.txt", 5);
+        day5_1("day5_1.txt", 5);
     }
 
     @Test
     public void day5_1_2() {
-//        day5_1("day5_2.txt", 5);
-        day5_1_V2("day5_2.txt", 5);
+        day5_1("day5_2.txt", 20012);
     }
 
-    private void day5_1_V2(String path, Integer expect) {
+    /**
+     * 条件：只考虑水平和垂直方向的直线
+     * 要求：计算点的重合次数>=2
+     */
+    private void day5_1(String path, Integer expect) {
+        List<Line> lines = formatInputData(path);
+        List<OverlapPoint> overlapPoints = overlapPoints(lines);
+        Map<OverlapPoint, List<OverlapPoint>> pointListMap = overlapPoints.stream().collect(Collectors.groupingBy(overlapPoint -> overlapPoint));
+        /**
+         * 统计每个点重复的次数
+         */
+        Iterator<Map.Entry<OverlapPoint, List<OverlapPoint>>> iterator = pointListMap.entrySet().iterator();
+        Map<Integer, Integer> countMap = new HashMap<>();
+        int leastTwoLinesOverlapCount = 0;
+        while (iterator.hasNext()) {
+            Map.Entry<OverlapPoint, List<OverlapPoint>> next = iterator.next();
+            int overlapNumbers = next.getValue().size();
+//            System.out.println(next.getKey() + "\t" + overlapNumbers);
+            if (overlapNumbers >= 2) {
+                leastTwoLinesOverlapCount++;
+            }
+            countMap.put(overlapNumbers, countMap.get(overlapNumbers) == null ? 1 : countMap.get(overlapNumbers) + 1);
+        }
+        System.out.println("leastTwoLinesOverlapCount=" + leastTwoLinesOverlapCount);
+        Assertions.assertEquals(expect, leastTwoLinesOverlapCount);
+    }
+
+    private List<Line> formatInputData(String path) {
         String text = ClasspathResources.text(path);
         List<String> lineStrs = Arrays.stream(text.split("\n")).collect(Collectors.toList());
         List<Line> lines = new ArrayList<>();
         for (String lineStr : lineStrs) {
-            System.out.printf("'%s',\n", lineStr);
+//            System.out.printf("'%s',\n", lineStr);
             List<String> points = Arrays.stream(lineStr.split(" -> ")).filter(o -> !"".equals(o)).collect(Collectors.toList());
             if (points.size() != 2) {
                 throw new RuntimeException("ERROR INPUT");
@@ -53,8 +76,11 @@ public class Test20211205 {
                 lines.add(line);
             }
         }
+        return lines;
+    }
+
+    private List<OverlapPoint> overlapPoints(List<Line> lines){
         List<OverlapPoint> overlapPoints = new ArrayList<>();
-        Map<OverlapPoint, Integer> map = new HashMap<>();
         for (Line line : lines) {
             int x1 = line.x1;
             int y1 = line.y1;
@@ -95,26 +121,10 @@ public class Test20211205 {
             }
 
         }
-        Map<OverlapPoint, List<OverlapPoint>> pointListMap = overlapPoints.stream().collect(Collectors.groupingBy(overlapPoint -> overlapPoint));
-        int max = 0;
-        Iterator<Map.Entry<OverlapPoint, List<OverlapPoint>>> iterator = pointListMap.entrySet().iterator();
-        Map<Integer, Integer> countMap = new HashMap<>();
-        while (iterator.hasNext()) {
-            Map.Entry<OverlapPoint, List<OverlapPoint>> next = iterator.next();
-            int overlapNumbers = next.getValue().size();
-            System.out.println(next.getKey() + "\t" + overlapNumbers);
-            if (overlapNumbers > max) {
-                max = overlapNumbers;
-            }
-            countMap.put(overlapNumbers, countMap.get(overlapNumbers) == null ? 1 : countMap.get(overlapNumbers) + 1);
-        }
-
-        Integer result = countMap.get(max);
-        System.out.println("result=" + result);
-        Assertions.assertEquals(expect, result);
+        return overlapPoints;
     }
 
-    public static class Line {
+   public static class Line {
         //        OverlapPoint point1;
 //        OverlapPoint point2;
         Integer x1;
@@ -144,9 +154,9 @@ public class Test20211205 {
         @Override
         public String toString() {
             return "OverlapPoint{" +
-                    "x=" + x +
-                    ", y=" + y +
-                    '}';
+                "x=" + x +
+                ", y=" + y +
+                '}';
         }
     }
 }
