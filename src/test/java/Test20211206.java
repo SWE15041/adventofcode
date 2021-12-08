@@ -26,7 +26,7 @@ public class Test20211206 {
 
     @Test
     public void day6_2_input_2() {
-        day_6_2("day6_2.txt", 1734242933190511L);
+        day_6_2("day6_2.txt", 1632779838045L);
     }
 
 
