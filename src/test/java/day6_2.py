@@ -1,32 +1,12 @@
-import numpy as np
-def read_file(filename):
-    # read file
-    with open(filename) as f:
-        lines = f.readlines()
-    output = [str.rstrip(line) for line in lines]
-    return output
+fishes = [2,1,1,4,4,1,3,4,2,4,2,1,1,4,3,5,1,1,5,1,1,5,4,5,4,1,5,1,3,1,4,2,3,2,1,2,5,5,2,3,1,2,3,3,1,4,3,1,1,1,1,5,2,1,1,1,5,3,3,2,1,4,1,1,1,3,1,1,5,5,1,4,4,4,4,5,1,5,1,1,5,5,2,2,5,4,1,5,4,1,4,1,1,1,1,5,3,2,4,1,1,1,4,4,1,2,1,1,5,2,1,1,1,4,4,4,4,3,3,1,1,5,1,5,2,1,4,1,2,4,4,4,4,2,2,2,4,4,4,2,1,5,5,2,1,1,1,4,4,1,4,2,3,3,3,3,3,5,4,1,5,1,4,5,5,1,1,1,4,1,2,4,4,1,2,3,3,3,3,5,1,4,2,5,5,2,1,1,1,1,3,3,1,1,2,3,2,5,4,2,1,1,2,2,2,1,3,1,5,4,1,1,5,3,3,2,2,3,1,1,1,1,2,4,2,2,5,1,2,4,2,1,1,3,2,5,5,3,1,3,3,1,4,1,1,5,5,1,5,4,1,1,1,1,2,3,3,1,2,3,1,5,1,3,1,1,3,1,1,1,1,1,1,5,1,1,5,5,2,1,1,5,2,4,5,5,1,1,5,1,5,5,1,1,3,3,1,1,3,1]
 
-data = read_file('./day6.txt')[0].split(',')
-data = [int(val) for val in data]
-# fish per day
-days = [3] * 9
-
-# read fish
-for day in data:
-    days[day] += 1
-
-def step(days):
-    birth = days.pop(0)     # fish that will give birth
-    days[6] += birth        # reset their counter
-    days.append(birth)      # new fish
-# after 80 days
-for _ in range(80):
-    step(days)
-
-print(sum(days))
-
-# after 256 days
-for _ in range(256 - 80):
-    step(days)
-
-print(sum(days))
+days = [0] * 9
+# Update the current numbers
+for fish in fishes:
+    days[fish] += 1
+for i in range(256):
+    # To make it cyclic: 0, 1, 2, 3, 4, 5, 6, 7, 8
+    today = i % len(days)
+    # Add new babies
+    days[(today + 7) % len(days)] += days[today]
+print(f'Total lanternfish after 256 days: {sum(days)}')
