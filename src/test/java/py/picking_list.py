@@ -44,16 +44,7 @@ jprint(response.json())
 restaurant = response.json()
 
 # create truck session
-inputs={
-           "delivery_zone_id": "3ef3b7ac-0eaa-4f22-87c8-f9e1d1403303",
-           "inputs": [
-               {
-                   "restaurant_name": "Barrio Café",
-                   "truck_session_count": 2
-               }
-           ]
-       }
-# inputs = json.dumps(restaurant)
+inputs = json.dumps(restaurant)
 headers = {'Content-type': 'application/json'}
 response = requests.post("%s/truck-session/bulk-create"%TEST_AGENT_URL,headers = headers,data = json.dumps(inputs))
 if response.status_code == 201:
@@ -62,9 +53,10 @@ else:
     print ("create truck session failed.")
     print ("fail response: %s" % response.status_code)
     sys.exit()
-jprint (response.json())
+
 truckSession = json.loads(jsonToObject(response.text), object_hook=TruckSession)
-print("truck_session_ids:", truckSession.truck_session_ids)
+print("create truck session response:\n")
+jprint (response.json())
 
 # get picking list template
 # inputs = {

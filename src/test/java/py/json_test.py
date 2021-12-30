@@ -105,18 +105,33 @@ def makefile(path,pathname,content):
 
 
 # json to custom object
-import json
-from collections import namedtuple
-from json import JSONEncoder
+# import json
+# from collections import namedtuple
+# from json import JSONEncoder
+#
+# def customStudentDecoder(studentDict):
+#     return namedtuple('X', studentDict.keys())(*studentDict.values())
+#
+# #Assume you received this JSON response
+# studentJsonData = '{"rollNumber": 1, "name": "Emma"}'
+#
+# # Parse JSON into an object with attributes corresponding to dict keys.
+# student = json.loads(studentJsonData, object_hook=customStudentDecoder)
+#
+# print("After Converting JSON Data into Custom Python Object")
+# print(student.rollNumber, student.name)
 
-def customStudentDecoder(studentDict):
-    return namedtuple('X', studentDict.keys())(*studentDict.values())
+# replace string
+delivery_zone_id = "3ef3b7ac-0eaa-4f22-87c8-f9e1d1403303",
 
-#Assume you received this JSON response
-studentJsonData = '{"rollNumber": 1, "name": "Emma"}'
+inputs={
+           "delivery_zone_id": delivery_zone_id,
+           "inputs": [
+               {
+                   "restaurant_name": "Barrio Café",
+                   "truck_session_count": 2
+               }
+           ]
+       }
 
-# Parse JSON into an object with attributes corresponding to dict keys.
-student = json.loads(studentJsonData, object_hook=customStudentDecoder)
-
-print("After Converting JSON Data into Custom Python Object")
-print(student.rollNumber, student.name)
+jprint(inputs)
