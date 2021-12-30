@@ -44,17 +44,32 @@ jprint(response.json())
 restaurant = response.json()
 
 # create truck session
-inputs = json.dumps(restaurant)
+# inputs = json.dumps(restaurant)
+inputs ={
+            "delivery_zone_id": "3ef3b7ac-0eaa-4f22-87c8-f9e1d1403303",
+            "inputs": [
+                {
+                    "restaurant_name": "Barrio Café",
+                    "truck_session_count": 1
+                }
+            ]
+        }
+# inputs = restaurant
+# inputs = {"inputs": [{"restaurant_name": "Bar Nakazawa", "truck_session_count": 8}, {"restaurant_name": "Barrio Caf\u00e9", "truck_session_count": 12}, {"restaurant_name": "Bobby Flay Steak", "truck_session_count": 6}, {"restaurant_name": "Chios Taverna by Michael Symon", "truck_session_count": 6}, {"restaurant_name": "Di Fara Pizza", "truck_session_count": 8}, {"restaurant_name": "Fred's Meat & Bread", "truck_session_count": 8}, {"restaurant_name": "Maydan", "truck_session_count": 6}, {"restaurant_name": "Pennycress by Seamus Mullen", "truck_session_count": 4}, {"restaurant_name": "Pizzeria Mozza", "truck_session_count": 8}, {"restaurant_name": "SriPraPhai", "truck_session_count": 6}, {"restaurant_name": "Taqueria del D\u00eda", "truck_session_count": 6}, {"restaurant_name": "The General Chinese", "truck_session_count": 12}, {"restaurant_name": "The Mainstay by Marc Murphy", "truck_session_count": 6}, {"restaurant_name": "The Regular", "truck_session_count": 4}]}
+
+print(inputs)
 headers = {'Content-type': 'application/json'}
-response = requests.post("%s/truck-session/bulk-create"%TEST_AGENT_URL,headers = headers,data = json.dumps(inputs))
+response = requests.post("%s/truck-session/bulk-create"%TEST_AGENT_URL, headers = headers, json = inputs)
 if response.status_code == 201:
     print ("create truck session succeed.")
 else:
     print ("create truck session failed.")
+    print (response)
     print ("fail response: %s" % response.status_code)
     sys.exit()
 
-truckSession = json.loads(jsonToObject(response.text), object_hook=TruckSession)
+# truckSession = json.loads(jsonToObject(response.text), object_hook=TruckSession)
+truckSession = response.json()
 print("create truck session response:\n")
 jprint (response.json())
 
@@ -64,9 +79,10 @@ jprint (response.json())
 #                 26735
 #             ]
 #         }
-inputs = truckSession.truck_session_ids
+# inputs = truckSession.truck_session_ids
+# print (inputs)
 headers = {'Content-type': 'application/json'}
-response = requests.put("%s/excel/truck-session/download-picking-list"%TEST_AGENT_URL, headers = headers, data = json.dumps(inputs))
+response = requests.put("%s/excel/truck-session/download-picking-list"%TEST_AGENT_URL, headers = headers, json = truckSession)
 if response.status_code == 200:
     print ("get picking list template succeed.")
 else:
